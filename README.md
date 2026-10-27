@@ -51,4 +51,8 @@ python3 scripts/check_site.py
 Results are selected from precomputed cases without interpolation. The website
 does not run Julia or solve a new equilibrium in the browser.
 
+After committing a checked update, maintainers publish the `site/` tree with
+`python3 scripts/publish_site.py`. GitHub Pages serves the root of the `gh-pages`
+branch; the repository's `main` branch retains the board source and refresh tools.
+
 Published version: 27 October 2026. Julia version used for the experiments: 1.13.3.

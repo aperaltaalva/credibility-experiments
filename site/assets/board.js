@@ -18,20 +18,26 @@
     const url = `${location.pathname}?${q.toString()}#${currentSection}`;
     history.replaceState(null, "", url);
   }
-  function showSection(key, focus = false) {
+  function showSection(key, focus = false, scroll = false) {
     currentSection = Object.hasOwn(sections, key) ? key : "shocks";
     Object.entries(sections).forEach(([name,id]) => { $(id).hidden = name !== currentSection; $("tab-" + name).setAttribute("aria-selected", String(name === currentSection)); });
     updateUrl();
     if (currentSection === "shocks" && ready) requestAnimationFrame(() => panels.forEach(id => Plotly.Plots.resize($(id))));
-    if (focus) $("tab-" + currentSection).focus();
+    if (focus) $("tab-" + currentSection).focus({preventScroll: true});
+    if (scroll) requestAnimationFrame(() => {
+      const offset = document.querySelector(".section-nav").getBoundingClientRect().height + 20;
+      const top = $(sections[currentSection]).getBoundingClientRect().top + window.scrollY - offset;
+      const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+      window.scrollTo({top: Math.max(0, top), behavior});
+    });
   }
   document.querySelectorAll("[data-section]").forEach((button, index, buttons) => {
-    button.addEventListener("click", () => showSection(button.dataset.section));
+    button.addEventListener("click", () => showSection(button.dataset.section, false, true));
     button.addEventListener("keydown", event => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
       event.preventDefault();
       const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
-      showSection(buttons[next].dataset.section, true);
+      showSection(buttons[next].dataset.section, true, true);
     });
   });
   function selectedModels() { return $("view").value === "reputation" ? reputationModels : ["Ramsey", "Markov", "Reputation_p" + $("prior").value]; }
@@ -126,8 +132,10 @@
     longRun(board.long_run); downloads(board.downloads); parameterTable(board.metadata);
     $("julia-version").textContent = board.metadata.julia_version; $("solution-hash").textContent = board.metadata.solution_sha256;
     const date = new Date(board.metadata.date + "T12:00:00Z"); if (!Number.isNaN(date.getTime())) $("updated-date").textContent = date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
-    ready = true; const section = safe(location.hash.slice(1),Object.keys(sections),"shocks"); await draw(); showSection(section);
+    ready = true;
+    const requestedSection = location.hash.slice(1), explicitSection = Object.hasOwn(sections, requestedSection);
+    const section = safe(requestedSection,Object.keys(sections),"shocks"); await draw(); showSection(section, false, explicitSection);
   }
-  window.addEventListener("hashchange", () => showSection(location.hash.slice(1)));
+  window.addEventListener("hashchange", () => showSection(location.hash.slice(1), false, true));
   init().catch(showError);
 })();

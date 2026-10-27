@@ -1,0 +1,64 @@
+INITIAL REPUTATION COMPARISON: INDEPENDENT VERIFICATION
+
+Inputs combine the original 42/44/47 debt experiments, the added 43/46 states at prior 0.5, and the newly added priors 0.1/0.9 at those states.
+All 15 reputation scenarios retain a permanently strategic government, 2,000 paired paths, 41 dates, and unchanged equilibrium functions. Initial beliefs are 0.1, 0.5, and 0.9.
+Independent reconstruction of 75 impact means and Monte Carlo SEs from 30,000 impact records:
+Maximum mean error 1.776e-15; maximum SE error 1.388e-17.
+Path-level impact primary-balance identity maximum residual 4.619e-14.
+Path-level impact consumption identity maximum residual 3.864e-14.
+Income path means and SEs match across all debt/prior cases exactly; maximum difference 0.
+Consumption identity over all 615 scenario-horizons: maximum residual 2.526e-15.
+All 16 original output files and equilibrium snapshot recorded under output/ in the earlier manifest retain their checksums.
+
+Impact responses (mean ± Monte Carlo SE): issuance and primary balance as percentages of fixed pre-shock quarterly income; spread as quarterly basis points.
+Debt 41.927261%, initial belief 10%: net_issuance_pct_reference +0.095690 ± 0.000000; primary_balance_pct_reference +0.008014 ± 0.002940; spread_quarterly_bp +4.839885 ± 0.039562
+Debt 41.927261%, initial belief 50%: net_issuance_pct_reference +0.095607 ± 0.000000; primary_balance_pct_reference -0.010833 ± 0.002810; spread_quarterly_bp +3.675341 ± 0.041141
+Debt 41.927261%, initial belief 90%: net_issuance_pct_reference +0.121679 ± 0.000000; primary_balance_pct_reference -0.048248 ± 0.002840; spread_quarterly_bp +2.859469 ± 0.041233
+Debt 43.045322%, initial belief 10%: net_issuance_pct_reference +0.015651 ± 0.000000; primary_balance_pct_reference +0.093654 ± 0.003383; spread_quarterly_bp +5.385483 ± 0.048383
+Debt 43.045322%, initial belief 50%: net_issuance_pct_reference +0.026224 ± 0.000000; primary_balance_pct_reference +0.067063 ± 0.003325; spread_quarterly_bp +4.221639 ± 0.050921
+Debt 43.045322%, initial belief 90%: net_issuance_pct_reference +0.042668 ± 0.000000; primary_balance_pct_reference +0.042298 ± 0.003471; spread_quarterly_bp +3.425816 ± 0.052954
+Debt 44.163382%, initial belief 10%: net_issuance_pct_reference -0.072348 ± 0.000000; primary_balance_pct_reference +0.187895 ± 0.003912; spread_quarterly_bp +6.051986 ± 0.059951
+Debt 44.163382%, initial belief 50%: net_issuance_pct_reference -0.051003 ± 0.000000; primary_balance_pct_reference +0.154237 ± 0.003941; spread_quarterly_bp +4.904959 ± 0.063810
+Debt 44.163382%, initial belief 90%: net_issuance_pct_reference -0.047358 ± 0.000000; primary_balance_pct_reference +0.145929 ± 0.004220; spread_quarterly_bp +4.145207 ± 0.068372
+Debt 45.840473%, initial belief 10%: net_issuance_pct_reference -0.222236 ± 0.000000; primary_balance_pct_reference +0.347965 ± 0.004871; spread_quarterly_bp +7.348435 ± 0.084395
+Debt 45.840473%, initial belief 50%: net_issuance_pct_reference -0.185993 ± 0.000000; primary_balance_pct_reference +0.306681 ± 0.005064; spread_quarterly_bp +6.271012 ± 0.091239
+Debt 45.840473%, initial belief 90%: net_issuance_pct_reference -0.205954 ± 0.000000; primary_balance_pct_reference +0.328800 ± 0.005557; spread_quarterly_bp +5.607104 ± 0.100980
+Debt 46.958533%, initial belief 10%: net_issuance_pct_reference -0.336910 ± 0.000000; primary_balance_pct_reference +0.469238 ± 0.005611; spread_quarterly_bp +8.467439 ± 0.107133
+Debt 46.958533%, initial belief 50%: net_issuance_pct_reference -0.290208 ± 0.000000; primary_balance_pct_reference +0.423834 ± 0.005934; spread_quarterly_bp +7.482832 ± 0.116973
+Debt 46.958533%, initial belief 90%: net_issuance_pct_reference -0.332193 ± 0.000000; primary_balance_pct_reference +0.473074 ± 0.006563; spread_quarterly_bp +6.913289 ± 0.131372
+
+High-debt differences between priors, paired across the same path index (difference in shock response; conditional Monte Carlo SE):
+Debt target 46, Reputation_p50 minus Reputation_p10, net_issuance_response: +0.036244 ± 0.000000
+Debt target 46, Reputation_p50 minus Reputation_p10, primary_balance_response: -0.041284 ± 0.000401
+Debt target 46, Reputation_p50 minus Reputation_p10, spread_response: -1.077423 ± 0.007046
+Debt target 46, Reputation_p90 minus Reputation_p50, net_issuance_response: -0.019961 ± 0.000000
+Debt target 46, Reputation_p90 minus Reputation_p50, primary_balance_response: +0.022119 ± 0.000588
+Debt target 46, Reputation_p90 minus Reputation_p50, spread_response: -0.663908 ± 0.010617
+Debt target 47, Reputation_p50 minus Reputation_p10, net_issuance_response: +0.046702 ± 0.000000
+Debt target 47, Reputation_p50 minus Reputation_p10, primary_balance_response: -0.045405 ± 0.000477
+Debt target 47, Reputation_p50 minus Reputation_p10, spread_response: -0.984607 ± 0.010005
+Debt target 47, Reputation_p90 minus Reputation_p50, net_issuance_response: -0.041985 ± 0.000000
+Debt target 47, Reputation_p90 minus Reputation_p50, primary_balance_response: +0.049240 ± 0.000699
+Debt target 47, Reputation_p90 minus Reputation_p50, spread_response: -0.569544 ± 0.014918
+
+Numerical diagnostics (164,000 state observations per case):
+Reputation_p50, debt target 42: out-of-grid debt 21, belief clamps 43, maximum difference-budget residual 4.368727601899991e-14.
+Reputation_p10, debt target 42: out-of-grid debt 22, belief clamps 95, maximum difference-budget residual 4.6407322429331543e-14.
+Reputation_p90, debt target 42: out-of-grid debt 20, belief clamps 29, maximum difference-budget residual 4.4336062599015236e-14.
+Reputation_p50, debt target 44: out-of-grid debt 21, belief clamps 41, maximum difference-budget residual 4.29101199017623e-14.
+Reputation_p10, debt target 44: out-of-grid debt 22, belief clamps 89, maximum difference-budget residual 4.5075054799781356e-14.
+Reputation_p90, debt target 44: out-of-grid debt 19, belief clamps 29, maximum difference-budget residual 4.901634653720066e-14.
+Reputation_p50, debt target 47: out-of-grid debt 20, belief clamps 34, maximum difference-budget residual 4.643507800494717e-14.
+Reputation_p10, debt target 47: out-of-grid debt 21, belief clamps 69, maximum difference-budget residual 4.340972026284362e-14.
+Reputation_p90, debt target 47: out-of-grid debt 19, belief clamps 28, maximum difference-budget residual 4.3439210561935226e-14.
+Reputation_p50, debt target 43: out-of-grid debt 21, belief clamps 42, maximum difference-budget residual 4.54081217071689e-14.
+Reputation_p50, debt target 46: out-of-grid debt 21, belief clamps 38, maximum difference-budget residual 4.606037773413618e-14.
+Reputation_p10, debt target 43: out-of-grid debt 22, belief clamps 93, maximum difference-budget residual 4.6736919889767137e-14.
+Reputation_p90, debt target 43: out-of-grid debt 20, belief clamps 29, maximum difference-budget residual 4.340972026284362e-14.
+Reputation_p10, debt target 46: out-of-grid debt 21, belief clamps 75, maximum difference-budget residual 4.709926025581179e-14.
+Reputation_p90, debt target 46: out-of-grid debt 19, belief clamps 28, maximum difference-budget residual 4.8627768478581856e-14.
+
+Interpretation: higher initial belief reduces the impact spread response at all five debts. Borrowing and fiscal responses are not universally monotonic in belief. At 45.840% and 46.959% debt, p=0.9 tightens the primary balance more than p=0.5, even while its spread response is smaller; this is reproduced from path-level outputs and exceeds conditional simulation error.
+Each shock response is measured against its own prior-specific baseline. Changes in responses do not alone reveal differences in outcome levels. The result is a conditional state comparison under the supplied solution, not a stationary average or a claim about welfare. It does not by itself identify the economic mechanism behind nonmonotonicity.
+Belief is the model probability of committed type, not an observed narrative credibility score. The actual type is held strategic; beliefs evolve after initialization through the original Bayesian update. Common future income and implementation draws are retained. No equilibrium or parameter is changed.
+Monte Carlo SEs are conditional simulation error, not empirical confidence intervals or parameter uncertainty. Fiscal adjustment y-c cannot distinguish taxes and spending.

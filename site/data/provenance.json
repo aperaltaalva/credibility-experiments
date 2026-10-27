@@ -7,6 +7,14 @@
     "source": "output/income_shock_reputation_20261027/reputation_by_initial_debt.pdf",
     "sha256": "f20fa14368248f47efe634483d741925932945e13b0358c054b242dd6771bfab"
   },
+  "downloads/verification.txt": {
+    "source": "output/income_shock_reputation_20261027/verification.txt",
+    "sha256": "48eb190a4705eaa799688702038de5ba40c88c18e3abd47026646626c5d0109d"
+  },
+  "downloads/results_note.txt": {
+    "source": "output/income_shock_reputation_20261027/results_note.txt",
+    "sha256": "f563be61238a0c811d2eb5e820a1ba5f9e2f0ce26ae55b9e60efac8c85dd21da"
+  },
   "data/impact_summary.csv": {
     "source": "output/income_shock_debt_comparison_20261027/impact_summary.csv",
     "sha256": "b34675435d4324d784465821b89573500bebd138ac26ab37af7e34fbaafa4049"

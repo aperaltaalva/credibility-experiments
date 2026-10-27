@@ -28,7 +28,9 @@ def copy_file(relative, destination, label, section):
 groups = {
     'output/income_shock_reputation_20261027': [
         ('responses_all_debts_priors.csv', 'All income-shock responses and Monte Carlo standard errors', 'Income shocks'),
-        ('reputation_by_initial_debt.pdf', 'Reputation comparison figure', 'Income shocks')],
+        ('reputation_by_initial_debt.pdf', 'Reputation comparison figure', 'Income shocks'),
+        ('verification.txt', 'Independent income-shock verification', 'Methods'),
+        ('results_note.txt', 'Reputation experiment findings and qualifications', 'Methods')],
     'output/income_shock_debt_comparison_20261027': [
         ('impact_summary.csv', 'Immediate responses by starting debt', 'Debt comparisons'),
         ('income_shock_by_initial_debt.pdf', 'Five-debt response paths', 'Debt comparisons'),
