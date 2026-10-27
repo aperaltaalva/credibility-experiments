@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-27",
+  "julia_version": "1.13.3",
+  "solution_sha256": "0435193a4eaf0deef40d95451d3d7c0df9001d23f38288f6f687492747583545",
+  "parameters": {
+    "rstar": 0.007417071777732875,
+    "dcrit": 0.65,
+    "cbar": 1.4,
+    "δ": 0.05,
+    "ρy": 0.945,
+    "σy": 0.025,
+    "γ": 1.0,
+    "β": 0.9740037464252967,
+    "κ": 0.05741707177773288,
+    "η": 20.0
+  },
+  "rule_bstar": 1.5101,
+  "rule_lambda": 0.8864,
+  "implementation_scale": 0.05,
+  "parameters_changed": false,
+  "equilibria_resolved": false,
+  "income_shock_percent": -3.360564197935123,
+  "paths_per_income_case": 2000,
+  "income_response_quarters": 41,
+  "finite_horizon_paths_per_type": 500,
+  "finite_horizon_quarters": 120,
+  "long_run_paths_per_case": 32,
+  "long_run_quarters": 4000,
+  "long_run_summary_window": [
+    2001,
+    4000
+  ],
+  "source_solution": "output/ramsey.jld2",
+  "uncertainty": "Monte Carlo standard errors describe simulation error, conditional on saved solutions and finite history pools."
+}

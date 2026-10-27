@@ -1,0 +1,133 @@
+"use strict";
+(() => {
+  const $ = id => document.getElementById(id);
+  const vars = ["net_issuance_pct_reference", "spread_quarterly_bp", "primary_balance_pct_reference"];
+  const panels = ["borrowing", "spread", "fiscal"];
+  const modelsAll = ["Ramsey", "Markov", "Reputation_p10", "Reputation_p50", "Reputation_p90"];
+  const reputationModels = ["Reputation_p10", "Reputation_p50", "Reputation_p90", "Markov"];
+  const repStyles = {Reputation_p10: ["Initial belief 10%", "#7950a2", "solid"], Reputation_p50: ["Initial belief 50%", "#148b88", "solid"], Reputation_p90: ["Initial belief 90%", "#cb8c18", "solid"], Markov: ["Markov reference", "#8593a0", "dash"]};
+  const sections = {shocks: "shocks", debt: "debt-section", longrun: "longrun", pricing: "pricing", methods: "methods"};
+  let board, data, debts, ready = false, currentSection = "shocks", toastTimer;
+  const params = new URLSearchParams(location.search);
+  const safe = (value, allowed, fallback) => allowed.includes(value) ? value : fallback;
+  function notify(message) { $("toast").textContent = message; $("toast").classList.add("visible"); clearTimeout(toastTimer); toastTimer = setTimeout(() => $("toast").classList.remove("visible"), 2500); }
+  function updateUrl() {
+    if (!ready) return;
+    const q = new URLSearchParams();
+    ["view", "debt", "prior", "scale", "horizon"].forEach(id => q.set(id, $(id).value));
+    const url = `${location.pathname}?${q.toString()}#${currentSection}`;
+    history.replaceState(null, "", url);
+  }
+  function showSection(key, focus = false) {
+    currentSection = Object.hasOwn(sections, key) ? key : "shocks";
+    Object.entries(sections).forEach(([name,id]) => { $(id).hidden = name !== currentSection; $("tab-" + name).setAttribute("aria-selected", String(name === currentSection)); });
+    updateUrl();
+    if (currentSection === "shocks" && ready) requestAnimationFrame(() => panels.forEach(id => Plotly.Plots.resize($(id))));
+    if (focus) $("tab-" + currentSection).focus();
+  }
+  document.querySelectorAll("[data-section]").forEach((button, index, buttons) => {
+    button.addEventListener("click", () => showSection(button.dataset.section));
+    button.addEventListener("keydown", event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
+      showSection(buttons[next].dataset.section, true);
+    });
+  });
+  function selectedModels() { return $("view").value === "reputation" ? reputationModels : ["Ramsey", "Markov", "Reputation_p" + $("prior").value]; }
+  function style(model) {
+    if ($("view").value === "reputation") return repStyles[model];
+    if (model === "Ramsey") return ["Ramsey", "#2864a0", "solid"];
+    if (model === "Markov") return ["Markov", "#d65a35", "solid"];
+    return [`Reputation · initial belief ${$("prior").value}%`, "#17856b", "solid"];
+  }
+  function series(debt, model, variable) { return data[`${debt}|${model}|${variable}`].filter(row => row[0] <= +$("horizon").value); }
+  function range(values) { const lo = Math.min(0, ...values), hi = Math.max(0, ...values), pad = Math.max((hi - lo) * .10, .015); return [lo - pad, hi + pad]; }
+  function legend(models) {
+    $("legend").replaceChildren();
+    for (const model of models) {
+      const [label, color, dash] = style(model), span = document.createElement("span"), line = document.createElement("i");
+      line.className = "swatch"; line.style.borderColor = color; line.style.borderTopStyle = dash === "dash" ? "dashed" : "solid"; line.setAttribute("aria-hidden", "true");
+      span.append(line, document.createTextNode(label)); $("legend").append(span);
+    }
+  }
+  async function draw() {
+    if (!ready) return;
+    const debt = $("debt").value, prior = $("prior").value, view = $("view").value, horizon = +$("horizon").value;
+    const models = selectedModels(), scaleModels = view === "reputation" ? reputationModels : modelsAll;
+    $("prior").disabled = view === "reputation";
+    $("prior-help").textContent = view === "reputation" ? "All three beliefs shown" : "Strategic actual government";
+    legend(models); $("chart-grid").setAttribute("aria-busy", "true");
+    const tasks = vars.map((variable, j) => {
+      const traces = models.map(model => {
+        const rows = series(debt, model, variable), [label,color,dash] = style(model);
+        return {type: "scatter", mode: "lines", x: rows.map(r => r[0]), y: rows.map(r => r[1]), customdata: rows.map(r => r[2]), name: label,
+          line: {color, width: 3, dash}, hovertemplate: "Quarter %{x}<br>Response %{y:.4f}<br>Monte Carlo SE %{customdata:.4f}<extra>" + label + "</extra>"};
+      });
+      const values = $("scale").value === "fixed" ? Object.keys(debts).flatMap(d => scaleModels.flatMap(m => series(d,m,variable).map(r => r[1]))) : traces.flatMap(t => t.y);
+      const layout = {margin: {l: 88, r: 20, t: 22, b: 63}, font: {family: "Arial, sans-serif", size: 15, color: "#203448"}, paper_bgcolor: "white", plot_bgcolor: "white", showlegend: false,
+        xaxis: {title: {text: "Quarters after income shock", font: {size: 14}}, range: [-.2,horizon+.2], tickvals: Array.from({length:6},(_,i) => i*horizon/5), showgrid: false, zeroline: false, automargin: true},
+        yaxis: {title: {text: j === 1 ? "Quarterly basis points" : "% of pre-shock<br>quarterly income", font: {size: 14}}, range: range(values), nticks: 6, tickformat: j === 1 ? ".1f" : ".2f", gridcolor: "#e7edf3", zerolinecolor: "#92a1ad", zerolinewidth: 1, automargin: true}, hovermode: "x unified"};
+      return Plotly.react(panels[j], traces, layout, {responsive: true, displaylogo: false, modeBarButtonsToRemove: ["select2d","lasso2d"], toImageButtonOptions: {format: "png", scale: 2, filename: `credibility_${panels[j]}_debt${debt}`}});
+    });
+    const impact = vars.map(v => series(debt, "Reputation_p" + prior, v)[0][1]);
+    $("selection-summary").textContent = view === "reputation" ? `Initial debt ${debts[debt].toFixed(1)}%. Three initial beliefs are shown together; dashed gray is the Markov reference. The actual reputation-model government remains strategic.` :
+      `Initial debt ${debts[debt].toFixed(1)}%; initial reputation ${prior}%. Reputation at impact: borrowing ${impact[0].toFixed(3)}%, spread +${impact[1].toFixed(2)} quarterly bp, primary balance ${impact[2].toFixed(3)}% of pre-shock income.`;
+    await Promise.all(tasks); $("chart-grid").setAttribute("aria-busy", "false"); updateUrl();
+    document.documentElement.dataset.chartsReady = "true";
+  }
+  function downloads(items) {
+    const labels = {shocks: "Income-shock experiments", income_shocks: "Income-shock experiments", debt: "Debt comparisons", longrun: "Long-run diagnostics", long_run: "Long-run diagnostics", pricing: "Pricing and narrative measurement", diagnostics: "Model diagnostics", replication: "Slide replication", methods: "Methods and verification", reputation: "Initial reputation"};
+    const groups = new Map();
+    for (const item of items || []) { const key = item.section || "Experiments"; if (!groups.has(key)) groups.set(key,[]); groups.get(key).push(item); }
+    for (const [section, entries] of groups) {
+      const article = document.createElement("article"), title = document.createElement("h4"), list = document.createElement("ul"); article.className = "download-group"; title.textContent = labels[section] || section;
+      for (const item of entries) {
+        if (!item.file || /^(?:[a-z]+:|\/\/)/i.test(item.file)) continue;
+        const li = document.createElement("li"), a = document.createElement("a"), label = document.createElement("span"), kind = document.createElement("span");
+        a.href = item.file; a.setAttribute("download", ""); label.textContent = item.label; kind.textContent = (item.kind || item.file.split(".").pop()).toUpperCase(); kind.className = "file-kind";
+        a.append(label,kind); li.append(a); list.append(li);
+      }
+      article.append(title,list); $("downloads").append(article);
+    }
+  }
+  function longRun(rows) {
+    const fmt = value => Number.isFinite(Number(value)) && value !== null ? Number(value).toFixed(2) : "—";
+    for (const row of rows || []) {
+      const tr = document.createElement("tr");
+      [row.model,fmt(row.debt),fmt(row.spread),`${fmt(row.low90)}–${fmt(row.high90)}`].forEach(value => {const td = document.createElement("td"); td.textContent = value; tr.append(td);}); $("longrun-table").append(tr);
+    }
+  }
+  function parameterTable(meta) {
+    const labels = {rstar:"Quarterly risk-free rate (r*)",dcrit:"Debt discount threshold (dcrit)",cbar:"c̄",δ:"Debt decay (δ)",ρy:"Income persistence (ρy)",σy:"Income innovation SD (σy)",γ:"γ",β:"Discount factor (β)",κ:"Coupon parameter (κ)",η:"Debt discount steepness (η)"};
+    for (const [key,value] of Object.entries(meta.parameters || {})) {
+      const tr = document.createElement("tr"), label = document.createElement("td"), val = document.createElement("td");
+      label.textContent = labels[key] || key; val.textContent = Number(value).toPrecision(7).replace(/\.?0+$/,""); tr.append(label,val); $("parameters-table").append(tr);
+    }
+    $("committed-rule").textContent = `Committed issuance rule: a(b) = ${meta.rule_bstar} + ${meta.rule_lambda} × (b − ${meta.rule_bstar}). Fiscal implementation-shock scale: ${meta.implementation_scale}.`;
+  }
+  $("share-view").addEventListener("click", async () => { updateUrl(); try { await navigator.clipboard.writeText(location.href); notify("Link copied — this selection is included."); } catch { notify("Copy the address bar to share this selection."); } });
+  $("download-selection").addEventListener("click", () => {
+    const debt = $("debt").value, models = selectedModels();
+    const csv = [["model","initial_debt_pct_annual_income","initial_belief","income_shock_pct","horizon_quarters","variable","response","monte_carlo_se"]];
+    for (const model of models) for (const variable of vars) for (const row of series(debt,model,variable)) csv.push([model,debts[debt],model.startsWith("Reputation_p") ? +model.slice("Reputation_p".length)/100 : "",-3.360564197935123,row[0],variable,row[1],row[2]]);
+    const blob = new Blob([csv.map(row => row.join(",")).join("\n") + "\n"], {type: "text/csv;charset=utf-8"}), url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = `credibility_shock_debt${debt}_${$("view").value}.csv`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url),1000); notify("Selected response data downloaded.");
+  });
+  ["view","debt","prior","scale","horizon"].forEach(id => $(id).addEventListener("change", () => { draw().catch(showError); }));
+  function showError(error) { $("load-error").hidden = false; $("load-error").textContent = "The experiment data or charts could not be loaded. Please reload the page. " + (error.message || ""); }
+  async function init() {
+    const response = await fetch("data/board-data.json"); if (!response.ok) throw new Error("Data request failed."); board = await response.json(); ({data,debts} = board.shock);
+    if (!window.Plotly) throw new Error("Plotting library unavailable.");
+    $("debt").replaceChildren();
+    for (const [key,value] of Object.entries(debts).sort((a,b) => a[1]-b[1])) { const option = document.createElement("option"); option.value = key; option.textContent = value.toFixed(1)+"%"; $("debt").append(option); }
+    $("debt").value = safe(params.get("debt"),Object.keys(debts),"44"); $("view").value = safe(params.get("view"),["models","reputation"],"reputation"); $("prior").value = safe(params.get("prior"),["10","50","90"],"50"); $("scale").value = safe(params.get("scale"),["fixed","zoom"],"fixed"); $("horizon").value = safe(params.get("horizon"),["20","40"],"20");
+    $("debt").disabled = false; $("share-view").disabled = false; $("download-selection").disabled = false;
+    longRun(board.long_run); downloads(board.downloads); parameterTable(board.metadata);
+    $("julia-version").textContent = board.metadata.julia_version; $("solution-hash").textContent = board.metadata.solution_sha256;
+    const date = new Date(board.metadata.date + "T12:00:00Z"); if (!Number.isNaN(date.getTime())) $("updated-date").textContent = date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
+    ready = true; const section = safe(location.hash.slice(1),Object.keys(sections),"shocks"); await draw(); showSection(section);
+  }
+  window.addEventListener("hashchange", () => showSection(location.hash.slice(1)));
+  init().catch(showError);
+})();
