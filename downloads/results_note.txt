@@ -1,0 +1,15 @@
+VARYING INITIAL REPUTATION UNDER THE SAME INCOME SHOCK
+
+Compare initial beliefs p0 = 10%, 50%, and 90% that the government is the committed type. The actual government is strategic in every case; only the initial belief changes. Subsequent beliefs evolve endogenously. These are model probabilities, not observed narrative scores.
+
+The income decline is 3.36056%. Debt, future income draws, and implementation shocks are matched across beliefs, with 2,000 paired paths and unchanged equilibrium functions. Every response is shock minus its own matched, prior-specific baseline. Available starting debts are 41.927%, 43.045%, 44.163%, 45.840%, and 46.959% of annual pre-shock income.
+
+Higher initial belief reduces the immediate spread response at all five debts. At 47% debt, the increase is 8.47, 7.48, and 6.91 quarterly basis points for initial beliefs 10%, 50%, and 90%. At 44.2%, it is 6.05, 4.90, and 4.15 bp; at 41.9%, 4.84, 3.68, and 2.86 bp.
+
+Fiscal adjustment is not uniformly monotonic in belief. At 47% debt, primary-balance tightening is 0.469%, 0.424%, and 0.473% of pre-shock quarterly income for the same three priors. Net issuance responses are -0.337%, -0.290%, and -0.332%. The 90%-versus-50% difference in primary-balance response is +0.04924 percentage points, with paired Monte Carlo SE 0.00070: this feature is present in the simulation, not an artifact of rounding. At 45.8%, primary tightening also turns upward from 50% to 90% belief (0.307% to 0.329%). These numbers alone do not establish the mechanism.
+
+At 44.2%, higher initial belief instead reduces fiscal tightening: 0.188%, 0.154%, and 0.146%. At 41.9%, the primary-balance response changes from slight tightening (+0.008%) to slight easing (-0.011% and -0.048%).
+
+Flows use fixed pre-shock quarterly income; spreads are quarterly basis points. A positive primary-balance response means fiscal tightening. The model's primary resource balance is y-c, with no separate tax or government-spending instruments.
+
+These are conditional responses, not unconditional or stationary comparative statics. Lower spread responses do not imply that every borrowing or fiscal outcome moves monotonically with belief. Accounting identities and all 75 impact means/SEs were independently checked; verification.txt contains the diagnostics. Simulation uncertainty does not include equilibrium approximation, parameter uncertainty, or empirical measurement error.

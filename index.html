@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A research board comparing Ramsey commitment, Markov discretion, and reputation in a sovereign debt model.">
+  <title>Credibility model · Experiment board</title>
+  <link rel="stylesheet" href="assets/board.css">
+  <script defer src="assets/plotly.min.js"></script>
+  <script defer src="assets/board.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to experiments</a>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div><p class="eyebrow">RESEARCH NOTEBOOK</p><h1>Credibility model</h1><p class="lead">Commitment, discretion, and reputation — an experiment board.</p></div>
+      <div class="version"><span class="status-dot"></span> Current parameters <span class="version-date" id="updated-date">27 October 2026</span></div>
+    </div>
+  </header>
+  <nav class="section-nav" aria-label="Experiments">
+    <div class="nav-inner" role="tablist" aria-label="Experiment sections">
+      <button id="tab-shocks" role="tab" aria-controls="shocks" aria-selected="true" data-section="shocks">Income shocks</button>
+      <button id="tab-debt" role="tab" aria-controls="debt-section" aria-selected="false" data-section="debt">Debt comparisons</button>
+      <button id="tab-longrun" role="tab" aria-controls="longrun" aria-selected="false" data-section="longrun">Long-run diagnostics</button>
+      <button id="tab-pricing" role="tab" aria-controls="pricing" aria-selected="false" data-section="pricing">Pricing &amp; narratives</button>
+      <button id="tab-methods" role="tab" aria-controls="methods" aria-selected="false" data-section="methods">Methods &amp; downloads</button>
+    </div>
+  </nav>
+  <main id="content">
+    <div class="research-label"><span>Preliminary numerical experiments</span><p>Saved model solutions at the existing parameters. These are not empirical estimates or a completed calibration.</p></div>
+    <div id="load-error" class="error" role="alert" hidden>The data could not be loaded. Please reload the page.</div>
+
+    <section id="shocks" class="board-section" role="tabpanel" aria-labelledby="tab-shocks">
+      <div class="section-heading"><div><p class="eyebrow">01 · PAIRED RESPONSES</p><h2>What changes after the same income shock?</h2><p>Hold starting debt fixed and compare the models, or isolate the effect of initial reputation.</p></div></div>
+      <div class="shock-banner"><div><strong>−3.36%</strong><span>Negative income shock at quarter 0</span></div><p>About 1.37 innovation standard deviations. Income subsequently follows the model’s persistent process. Curves are mean changes from matched baseline paths.</p></div>
+      <div class="controls" aria-label="Income shock controls">
+        <label for="view">Compare<select id="view"><option value="reputation">Initial reputation levels</option><option value="models">Ramsey, Markov &amp; reputation</option></select></label>
+        <label for="debt">Initial debt / annual income<select id="debt" disabled><option>Loading…</option></select></label>
+        <label for="prior" id="prior-label">Initial reputation<select id="prior" disabled><option value="10">10%</option><option value="50" selected>50%</option><option value="90">90%</option></select><span class="control-help" id="prior-help">All three beliefs shown</span></label>
+        <label for="scale">Vertical scales<select id="scale"><option value="fixed">Fixed across states</option><option value="zoom">Zoom to selected curves</option></select></label>
+        <label for="horizon">Horizon<select id="horizon"><option value="20">20 quarters</option><option value="40">40 quarters</option></select></label>
+      </div>
+      <div class="chart-toolbar"><div class="legend" id="legend" aria-label="Chart legend"></div><div class="chart-actions"><button id="share-view" class="quiet-button" disabled>Copy this view</button><button id="download-selection" class="quiet-button" disabled>Download selected data</button></div></div>
+      <div class="charts" aria-busy="true" id="chart-grid">
+        <article class="chart-panel"><h3>Borrowing response</h3><p>Net debt issuance</p><div id="borrowing" class="plot" role="img" aria-label="Borrowing responses to the negative income shock"></div></article>
+        <article class="chart-panel"><h3>Spread response</h3><p>Quarterly basis points</p><div id="spread" class="plot" role="img" aria-label="Spread responses to the negative income shock"></div></article>
+        <article class="chart-panel"><h3>Fiscal response</h3><p>Primary balance · positive means tightening</p><div id="fiscal" class="plot" role="img" aria-label="Primary balance responses to the negative income shock"></div></article>
+      </div>
+      <p id="selection-summary" class="selection-summary" aria-live="polite">Loading saved responses…</p>
+      <p class="units-note">Flow changes are percentages of fixed pre-shock quarterly income. Each outcome has its own scale. Fixed scales are consistent across debts and beliefs within the selected view; “Zoom” explicitly changes them.</p>
+      <div class="insight-grid">
+        <article class="insight"><span class="small-label">A robust pattern in these cases</span><h3>Reputation dampens the spread increase</h3><p>At every tested debt, a higher initial belief in the committed type reduces the immediate spread response.</p></article>
+        <article class="insight"><span class="small-label">A distinction worth testing</span><h3>Fiscal adjustment is not uniformly smaller</h3><p>At 47% debt, primary-balance tightening is 0.469%, 0.424%, and 0.473% of pre-shock income for beliefs of 10%, 50%, and 90%.</p></article>
+      </div>
+      <details class="method-box"><summary>How to read this experiment</summary><div class="details-content"><p>Initial reputation is the perceived probability of the committed type. The simulated government stays strategic in the reputation model; beliefs update after quarter 0. Changing this belief does not change the government’s actual type.</p><p>Each case uses 2,000 paired paths, common future income draws, and unchanged equilibrium functions. Controls select saved simulations without interpolating between debts or beliefs. The primary resource balance is <em>y − c</em>; the model has no separate tax and government-spending instruments.</p><p>Ramsey preserves inherited commitments and has no implementation noise. Markov and reputation include implementation noise. Ramsey averages over debt-specific promise histories, so debt comparisons do not hold its entire state fixed. Its lowest-debt pool has 78 histories; spread means retain rare tails.</p></div></details>
+      <details class="figure-box"><summary>Static overview: three reputation levels at three debts</summary><a href="assets/figures/reputation_by_initial_debt.png" target="_blank" rel="noopener"><img src="assets/figures/reputation_by_initial_debt.png" alt="Nine panels compare initial reputation beliefs of 10, 50, and 90 percent at three starting debts." loading="lazy"></a></details>
+    </section>
+
+    <section id="debt-section" class="board-section" role="tabpanel" aria-labelledby="tab-debt" hidden>
+      <div class="section-heading"><div><p class="eyebrow">02 · STATE DEPENDENCE</p><h2>How does starting debt change the response?</h2><p>Five debt levels within the central comparison range: 41.9%, 43.0%, 44.2%, 45.8%, and 47.0% of annual income.</p></div></div>
+      <div class="insight-grid"><article class="insight"><span class="small-label">Markov and reputation</span><h3>Higher debt amplifies the impact response</h3><p>At 50% initial reputation, higher debt brings a larger initial spread increase, less borrowing, and stronger fiscal tightening across the tested states.</p></article><article class="insight"><span class="small-label">Ramsey</span><h3>The pattern is irregular</h3><p>At 43.0% debt, 97.9% of sampled histories have no immediate issuance change. At 45.8%, initial tightening exceeds that at 47.0%. The economic or numerical cause remains unresolved.</p></article></div>
+      <figure class="wide-figure"><a href="assets/figures/income_shock_by_initial_debt.png" target="_blank" rel="noopener"><img src="assets/figures/income_shock_by_initial_debt.png" alt="Borrowing, spread and primary balance responses for five initial debts, with one column per model." loading="lazy"></a><figcaption>Same negative 3.36% income shock. Columns identify models; colors identify initial debt. Reputation starts at 50%.</figcaption></figure>
+      <details class="figure-box"><summary>Compare the immediate responses directly</summary><a href="assets/figures/income_shock_impact_by_debt.png" target="_blank" rel="noopener"><img src="assets/figures/income_shock_impact_by_debt.png" alt="Impact responses plotted against the five simulated initial debt levels." loading="lazy"></a></details>
+      <details class="figure-box"><summary>Cash financing and consumption</summary><a href="assets/figures/income_shock_fiscal_detail.png" target="_blank" rel="noopener"><img src="assets/figures/income_shock_fiscal_detail.png" alt="Cash financing and consumption responses at three initial debt levels." loading="lazy"></a></details>
+      <p class="units-note">Debt changes also change the distribution of inherited Ramsey promises. Exact debt conditioning and the solution grid may matter; the figures do not establish a general monotonicity result.</p>
+    </section>
+
+    <section id="longrun" class="board-section" role="tabpanel" aria-labelledby="tab-longrun" hidden>
+      <div class="section-heading"><div><p class="eyebrow">03 · SUPPORT &amp; CONVERGENCE</p><h2>Where do the simulated economies spend their time?</h2><p>Long-run diagnostics from different starting debts, incomes, and beliefs.</p></div></div>
+      <div class="callout"><strong>Common central debt range: about 40.0–47.7%</strong><p>This is the overlap of the central 90% marginal debt ranges across Ramsey, Markov, and both permanent reputation types.</p></div>
+      <div class="table-card"><h3>Long-run numerical means</h3><p>Selected reference starts; final 2,000 of 4,000 quarters across 32 paths.</p><div class="table-scroll"><table><thead><tr><th scope="col">Model / permanent type</th><th scope="col">Mean debt<br><span>% annual income</span></th><th scope="col">Mean spread<br><span>quarterly bp</span></th><th scope="col">Central 90% debt range<br><span>% annual income</span></th></tr></thead><tbody id="longrun-table"></tbody></table></div></div>
+      <figure class="wide-figure"><a href="assets/figures/long_run_support_and_conditional_spreads.png" target="_blank" rel="noopener"><img src="assets/figures/long_run_support_and_conditional_spreads.png" alt="Long-run debt distributions and spreads conditional on debt and middle income." loading="lazy"></a><figcaption>The strategic reputation case approaches Markov as its type is learned. The committed-type case remains distinct.</figcaption></figure>
+      <details class="method-box"><summary>What convergence does—and does not—establish</summary><div class="details-content"><p>Under common draws, tested initial conditions numerically converge within each regime and permanent type. This is evidence of forgetting the tested starting conditions. It is not a proof of ergodicity, uniqueness, or common support of the full state vector.</p><p>The shock experiment’s 10%, 50%, and 90% initial reputation beliefs describe learning transitions. They are not the strategic government’s asymptotic posterior.</p></div></details>
+      <details class="figure-box"><summary>Earlier transition experiment: 500 paired paths</summary><a href="assets/figures/transition_comparison.png" target="_blank" rel="noopener"><img src="assets/figures/transition_comparison.png" alt="Finite-horizon model trajectories and learning paths for different government types." loading="lazy"></a></details>
+    </section>
+
+    <section id="pricing" class="board-section" role="tabpanel" aria-labelledby="tab-pricing" hidden>
+      <div class="section-heading"><div><p class="eyebrow">04 · TOWARD MEASUREMENT</p><h2>Connect model states to observable behavior</h2><p>State-contingent pricing and an illustrative bridge between type beliefs and delivery.</p></div></div>
+      <div class="insight-grid"><article class="insight"><span class="small-label">Prices at a given state</span><h3>Beliefs affect expected spreads</h3><p>At median income and roughly 45% debt, expected strategic-reputation spreads are 28.25, 18.84, and 12.10 quarterly basis points at beliefs of 10%, 50%, and 90%.</p></article><article class="insight"><span class="small-label">Narrative measurement</span><h3>A type belief is not a delivery probability</h3><p>Observable adherence also depends on the policy rule, incentives, state, and implementation noise. No mapping to observed narrative categories has yet been estimated.</p></article></div>
+      <figure class="wide-figure"><a href="assets/figures/state_and_measurement_implications.png" target="_blank" rel="noopener"><img src="assets/figures/state_and_measurement_implications.png" alt="Expected spreads by debt at three reputation beliefs and an illustrative comparison of beliefs with delivery probabilities." loading="lazy"></a><figcaption>The delivery band is illustrative. This is a measurement-design exercise, not a fitted narrative credibility index.</figcaption></figure>
+      <details class="method-box"><summary>Scope of the pricing result</summary><div class="details-content"><p>The result concerns confidence in the model’s particular committed rule. It is not a universal statement that credibility always lowers spreads. A reversal at 65% debt appears in the state exercise, but that debt level is a rare stress-state counterfactual outside the central range used here.</p></div></details>
+    </section>
+
+    <section id="methods" class="board-section" role="tabpanel" aria-labelledby="tab-methods" hidden>
+      <div class="section-heading"><div><p class="eyebrow">05 · REPRODUCIBILITY</p><h2>Methods, figures, and data</h2><p>Inspect the experiment definitions and download the outputs behind the board.</p></div></div>
+      <div class="method-grid"><article class="method-card"><h3>What remains fixed</h3><p>The supplied parameterization and saved equilibrium functions. No new calibration or equilibrium solve was used for these comparisons.</p></article><article class="method-card"><h3>What is checked</h3><p>Paired accounting identities, equivalence with native simulation paths, Ramsey price promises, and independent reconstruction of impact statistics.</p></article><article class="method-card"><h3>What is uncertain</h3><p>Numerical approximation, rare Ramsey tails, and history-pool sampling. Monte Carlo standard errors exclude parameter and empirical uncertainty.</p></article></div>
+      <details class="method-box" open><summary>Definitions and comparability</summary><div class="details-content"><p><strong>Borrowing:</strong> net face issuance, <em>b′ − (1 − δ)b</em>. <strong>Cash financing:</strong> <em>q[b′ − (1 − δ)b]</em>. <strong>Primary resource balance:</strong> <em>y − c</em>. The latter is the fiscal adjustment measure; tax and spending instruments are not separate model choices.</p><p><strong>Units:</strong> debt is scaled by annual income; response flows use fixed pre-shock quarterly income; diagnostic spreads use quarterly basis points. The original slide simulation series uses different spread units and should not be read as these diagnostic basis points.</p><p><strong>Cross-model comparison:</strong> Ramsey has inherited commitment promises and no implementation noise. Markov and reputation include implementation noise. The experiment compares the supplied models rather than isolating commitment while holding every other model feature fixed.</p><p><strong>Income shock:</strong> the middle income node is replaced at impact by the adjacent lower node, a 3.36056% decline (1.367 innovation standard deviations in logs). Future paths use the original discrete transition matrix and coupled draws.</p></div></details>
+      <details class="method-box"><summary>Current parameterization</summary><div class="details-content"><p>The model period is a quarter. The values below describe the saved solution used throughout this board.</p><div class="table-scroll"><table class="parameter-table"><thead><tr><th scope="col">Parameter</th><th scope="col">Value</th></tr></thead><tbody id="parameters-table"></tbody></table></div><p id="committed-rule"></p></div></details>
+      <div class="downloads-heading"><h3>Download the experiments</h3><p>CSV for analysis, PDF/PNG for discussion, and notes for assumptions and checks. <a href="downloads/experiment-data.zip" download>Download the data bundle (ZIP)</a>.</p></div><div id="downloads" class="download-groups"></div>
+      <details class="method-box"><summary>Slide replication and source version</summary><div class="details-content"><p>All nine figure PDFs and two table fragments were reproduced from the supplied solution. Original scatter sampling was unavailable, so the replacement is seeded. The original figures named <em>zeta</em> plot <em>1 − ζ</em> while retaining the source label.</p><dl class="source-meta"><dt>Julia version</dt><dd id="julia-version">1.13.3</dd><dt>Saved solution SHA-256</dt><dd><code id="solution-hash"></code></dd></dl></div></details>
+    </section>
+  </main>
+  <footer><div><strong>Credibility model · Experiment board</strong><p>Preliminary results for research discussion.</p></div><a href="https://github.com/aperaltaalva/credibility-experiments" target="_blank" rel="noopener">Board source on GitHub <span aria-hidden="true">↗</span></a></footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
