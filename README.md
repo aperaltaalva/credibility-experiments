@@ -2,8 +2,8 @@
 
 [Open the experiment board](https://aperaltaalva.github.io/credibility-experiments/)
 
-Interactive comparisons of the supplied Ramsey, Markov, and reputation solutions
-at their existing parameters. These are preliminary numerical experiments, not
+Interactive comparisons of Ramsey, Markov, and reputation solutions, with baseline
+annual discount factor 0.90 and one lower-patience case of 0.85. These are preliminary numerical experiments, not
 empirical estimates or a completed calibration.
 
 The board includes the same negative income shock at five initial debt levels and
@@ -14,6 +14,10 @@ reproduced slide figures/tables. Figures and underlying CSVs can be downloaded.
 ## Read the experiments
 
 - The income shock is **−3.36%**, approximately 1.37 innovation standard deviations.
+- The patience selector changes income-shock and debt-comparison charts. The lower
+  case changes quarterly β to `0.85^(1/4)` and solves equilibrium policies and prices
+  again; all other primitives and the committed rule are held fixed. Fixed chart
+  scales span both patience cases. Long-run, pricing, and slide results remain baseline.
 - Reputation means the initial probability assigned to the committed type. In the
   shock experiments, the actual government remains strategic and beliefs update.
 - Shock flow responses use fixed pre-shock quarterly income; spreads are quarterly
@@ -47,6 +51,12 @@ Refreshing the public data requires Python 3.11 or newer (for the standard TOML 
 python3 scripts/refresh_data.py --research-root /path/to/theory_experiments
 python3 scripts/check_site.py
 ```
+
+To include the lower-patience outputs, add
+`--lower-patience-dir /path/to/theory_experiments/output/lower_patience_20261027`
+to the refresh command. It reads the solved experiment's CSV and metadata, and
+includes its static figures when present. The existing baseline CSV stays unchanged.
+Share the lower case with `?patience=lower#shocks` or `?patience=lower#debt`.
 
 Results are selected from precomputed cases without interpolation. The website
 does not run Julia or solve a new equilibrium in the browser.

@@ -1,0 +1,111 @@
+{
+  "notes": [
+    "Conditional two-income-state response: at date0 baseline is node11 and adverse realization node10; thereafter original transitions resume.",
+    "Same future inverse-CDF uniform draws across arms and models; these are coupled discrete Markov innovations, not identical additive AR innovations.",
+    "Fiscal implementation shocks are identical across both arms and Fiscal models; Ramsey has none in its original solution.",
+    "Each debt scenario inherits the exact debt node from sampled stationary Ramsey predecessor histories with prior income node11. Both arms use the SAME pre-shock history and successor-price menu.",
+    "Ramsey does not reoptimize its initial promised price when the shock arrives. Subsequent promises use saved continuation menus.",
+    "Requested debt targets are rounded to adjacent feasible saved debt nodes; actual values and history counts are reported.",
+    "Reputation conditions on a permanently strategic government; initial priors are reported separately. These beliefs describe a learning transition, not its asymptotic posterior.",
+    "Flow responses are percentages of FIXED pre-shock quarterly income, avoiding denominator artifacts. Debt reference scaling uses four times that income.",
+    "Primary balance=y-c=kappa*b-q*(bp-(1-delta)*b). No separate tax or government-spending instruments exist.",
+    "Spreads are quarterly basis points. Monte Carlo SE is simulation error, not empirical or parameter uncertainty.",
+    "Ramsey selected histories satisfy previous income and issued-debt conditions; impacts average over inherited promise heterogeneity.",
+    "Only government beta changes from annual 0.90 to 0.85; lender rate, rule, grids, and all other primitives match the original snapshot. All three equilibria are newly solved.",
+    "The lower-beta stationary Ramsey history simulation uses eight million periods because the lowest original debt node had only thirteen qualifying histories in the first million. Initial debt nodes and conditional-history criteria are unchanged."
+  ],
+  "income_shock_percent": -3.360564197935123,
+  "equilibria_resolved": true,
+  "parameters_changed": true,
+  "ramsey_history_burnin": 10000,
+  "julia_version": "1.13.3",
+  "ramsey_history_horizon": 8000000,
+  "annual_beta": 0.8500000000000001,
+  "target_debt_levels": [
+    42,
+    43,
+    44,
+    46,
+    47
+  ],
+  "response_horizons": 41,
+  "baseline_source_sha256": "0435193a4eaf0deef40d95451d3d7c0df9001d23f38288f6f687492747583545",
+  "source_solution": "output/lower_patience_20261027/combined_lower.jld2",
+  "actual_debt_levels": [
+    41.9272614844626,
+    43.04532179071494,
+    44.16338209696726,
+    45.84047255634577,
+    46.95853286259811
+  ],
+  "reference_income": 0.9970831612000224,
+  "engine_matches_native_max_error": 0.0,
+  "seedbase": 932710,
+  "all_models_converged": true,
+  "solver_tolerance": 1e-06,
+  "shock_income": 0.9635755414610947,
+  "income_log_shock_in_innovation_sd": -1.3673315983805412,
+  "quarterly_beta": 0.9601845894041878,
+  "paths_per_scenario": 2000,
+  "only_parameter_changed": "government discount factor",
+  "source_sha256": "8aa017f3acc0f22b39475f1cd8aafb6dff57a714b0c641ec806d8e272266fca0",
+  "initial_reputation_priors": [
+    0.5,
+    0.1,
+    0.9
+  ],
+  "created_at": "2026-10-27T20:01:44.952",
+  "baseline_annual_beta": 0.9,
+  "ramsey_solver": {
+    "solver_note": "Howard20 cycled at beta annual0.85; unaccelerated Bellman iteration used with unchanged convergence tolerance.",
+    "solution_path": "output/lower_patience_20261027/ramsey_lower.jld2",
+    "annual_beta": 0.85,
+    "source_solution": "output/ramsey.jld2",
+    "grid": [
+      250,
+      71,
+      21
+    ],
+    "solver_tolerance": 1e-06,
+    "baseline_quarterly_beta": 0.9740037464252967,
+    "howard_steps": 0,
+    "quarterly_beta": 0.9601845894041878,
+    "only_parameter_changed": "beta",
+    "source_sha256": "0435193a4eaf0deef40d95451d3d7c0df9001d23f38288f6f687492747583545",
+    "created_at": "2026-10-27T19:59:46.469",
+    "solver": {
+      "iterations": 236,
+      "nflag": 0,
+      "time": 71.03535389900208,
+      "converged": true,
+      "dv": 9.770818569539143e-07,
+      "db": 0.0
+    }
+  },
+  "fiscal_solver": {
+    "baseline_beta_annual": 0.9,
+    "beta_annual": 0.85,
+    "beta_quarterly": 0.9601845894041878,
+    "tolerance": 1e-06,
+    "models": {
+      "markov": {
+        "iterations": 241,
+        "dq": 3.1368357991074387e-10,
+        "dx": 1.1699960631750183e-11,
+        "nflag": 0,
+        "time": 0.5815989971160889,
+        "converged": true,
+        "dv": 9.675639753390136e-07
+      },
+      "reputation": {
+        "iterations": 242,
+        "dq": 9.372476701089379e-08,
+        "dx": 3.581394903877932e-08,
+        "nflag": 0,
+        "time": 33.76917004585266,
+        "converged": true,
+        "dv": 9.7813334385881e-07
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+Lower patience verification
+{
+  "row_count": 12095,
+  "scenarios": 25,
+  "matches_baseline_case_keys": true,
+  "fiscal_matches_independent_staging_run": true,
+  "all_finite": true,
+  "ramsey_history_counts": {
+    "42": 91,
+    "43": 1468,
+    "44": 12537,
+    "46": 149443,
+    "47": 357212
+  },
+  "maximum_errors": {
+    "max_difference_budget_error": 4.765372124682088e-14,
+    "max_consumption_identity_error": 5.684341886080802e-14,
+    "max_level_budget_error": 2.220446049250313e-16,
+    "max_ramsey_pricing_error": 1.541022864870456e-11
+  },
+  "source_snapshot_sha256": "0435193a4eaf0deef40d95451d3d7c0df9001d23f38288f6f687492747583545"
+}
