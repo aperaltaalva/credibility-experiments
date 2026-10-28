@@ -212,5 +212,46 @@
   "downloads/lower_patience_income_shock_fiscal_detail.pdf": {
     "source": "output/lower_patience_20261027/income_shock_fiscal_detail.pdf",
     "sha256": "805ea9bd57078c65b3f643f098f682c2c6fe145484ec156ab6862144ef12ee6a"
+  },
+  "data/implementation_shock_responses.csv": {
+    "source": "output/implementation_shock_20261028/responses.csv",
+    "source_sha256": "5ea35e8f0b45fcefe33f33f0abb22bcb9b9996510c1e3df1bf8bef3aca066c07",
+    "sha256": "5ea35e8f0b45fcefe33f33f0abb22bcb9b9996510c1e3df1bf8bef3aca066c07"
+  },
+  "data/implementation_shock_levels.csv": {
+    "source": "output/implementation_shock_20261028/levels.csv",
+    "source_sha256": "efd5a8f52089b5eed25ae3c186caa0a2ba049a36e77dfc9f9010850dd16c578a",
+    "sha256": "efd5a8f52089b5eed25ae3c186caa0a2ba049a36e77dfc9f9010850dd16c578a"
+  },
+  "data/implementation_shock_impact_decomposition.csv": {
+    "source": "output/implementation_shock_20261028/impact_decomposition.csv",
+    "source_sha256": "e67f8b9a6aabd3e4de8d1e12c4df95a32243d1cd5b14c65677d3cf989e18c48d",
+    "sha256": "e67f8b9a6aabd3e4de8d1e12c4df95a32243d1cd5b14c65677d3cf989e18c48d"
+  },
+  "data/implementation_shock_predictive_adherence.csv": {
+    "source": "output/implementation_shock_20261028/predictive_adherence.csv",
+    "source_sha256": "a5d0d66f444c72ecdd37c48dd1530feb9a45d04bb2420a4d4f972ca62654e84f",
+    "sha256": "a5d0d66f444c72ecdd37c48dd1530feb9a45d04bb2420a4d4f972ca62654e84f"
+  },
+  "data/implementation_shock_checks.csv": {
+    "source": "output/implementation_shock_20261028/checks.csv",
+    "source_sha256": "52718946fa6038b96db0ef6a8a0a8766deee71b98e0ad75ca64278d1401bd85b",
+    "sha256": "52718946fa6038b96db0ef6a8a0a8766deee71b98e0ad75ca64278d1401bd85b"
+  },
+  "data/implementation_shock_experiment.json": {
+    "source": "output/implementation_shock_20261028/experiment.toml",
+    "source_sha256": "895dd41c4c67ae1ab3ac23396465a6c38a8873d4fea2da48d25dc55ab5bba410",
+    "sha256": "27c048630bb1a59746174d7885ea6c6fb7034ef50d41a4f44ceceaa6fdf0d4ab",
+    "transformation": "TOML converted to JSON; research source paths made relative"
+  },
+  "assets/figures/implementation_shock_paths.png": {
+    "source": "output/implementation_shock_20261028/implementation_shock_paths.png",
+    "source_sha256": "ea0b694b22ead39ad251a2933c51745d6368a789bfdf3698717e30349991b052",
+    "sha256": "ea0b694b22ead39ad251a2933c51745d6368a789bfdf3698717e30349991b052"
+  },
+  "downloads/implementation_shock_paths.pdf": {
+    "source": "output/implementation_shock_20261028/implementation_shock_paths.pdf",
+    "source_sha256": "4b5a2a52add10524637eb97a38edf2df4b8203d98b9e65886458ada6d1ddd7d3",
+    "sha256": "4b5a2a52add10524637eb97a38edf2df4b8203d98b9e65886458ada6d1ddd7d3"
   }
 }

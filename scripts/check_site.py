@@ -29,7 +29,33 @@ if 'lower' in cases:
     assert cases['lower']['metadata']['equilibria_resolved'] is True
     assert cases['lower']['metadata']['all_models_converged'] is True
     assert cases['lower']['data'] != cases['baseline']['data']
-for download in bundle['downloads']:
+implementation = json.loads((site / 'data/implementation-shock.json').read_text())
+assert len(implementation['responses']) == 52
+for key, values in implementation['responses'].items():
+    assert [row[0] for row in values] == list(range(41)), key
+    for h, response, mcse, baseline, shock in values:
+        assert all(math.isfinite(x) for x in [response, mcse, baseline, shock])
+        assert mcse >= 0 and abs(shock - baseline - response) < 1e-10
+for impact in implementation['impacts']:
+    total = impact['debt_first_component_bp'] + impact['learning_at_new_debt_component_bp']
+    assert abs(total - impact['total_spread_response_bp']) < 1e-10
+for case in implementation['patience_cases']:
+    predictive_case = 'lower_patience' if case == 'lower' else case
+    for offset in [-.05, .05]:
+        for tolerance in [.025, .05, .1]:
+            forecasts = [r for r in implementation['predictive'] if r['patience'] == predictive_case
+                         and r['observation_offset_from_strategic_target'] == offset
+                         and r['illustrative_tolerance'] == tolerance]
+            assert sorted(r['horizon'] for r in forecasts) == [1,2,3,4]
+            for r in forecasts:
+                zero = next(z for z in implementation['predictive'] if z['patience'] == predictive_case
+                            and z['observation_offset_from_strategic_target'] == 0
+                            and z['illustrative_tolerance'] == tolerance and z['horizon'] == r['horizon'])
+                assert abs(r['probability_any_excess_through_horizon']
+                           - r['probability_any_excess_change_from_zero']
+                           - zero['probability_any_excess_through_horizon']) < 1e-12
+all_downloads = bundle['downloads'] + implementation['downloads']
+for download in all_downloads:
     target = (site / download['file']).resolve()
     assert target.is_relative_to(site.resolve()) and target.is_file(), download
     assert target.stat().st_size > 0, download
@@ -71,5 +97,8 @@ for path in site.rglob('*'):
 with zipfile.ZipFile(site / 'downloads/experiment-data.zip') as z:
     assert all(not n.startswith('/') and '..' not in Path(n).parts for n in z.namelist())
     assert z.testzip() is None
+    for download in implementation['downloads']:
+        if download['file'].startswith('data/'):
+            assert z.read(download['file']) == (site / download['file']).read_bytes()
 print(f'Passed: {sum(len(c["data"]) for c in cases.values())} chart series across {len(cases)} patience cases, {len(groups)} scenario-horizon accounting checks, '
-      f'{len(bundle["downloads"])} downloads, local links and public-package scan.')
+      f'52 implementation response series, 72 predictive forecasts, {len(all_downloads)} downloads, local links and public-package scan.')

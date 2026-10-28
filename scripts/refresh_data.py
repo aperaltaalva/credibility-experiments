@@ -13,6 +13,8 @@ parser.add_argument('--research-root', type=Path, required=True)
 parser.add_argument('--plotly-js', type=Path)
 parser.add_argument('--lower-patience-dir', type=Path,
                     help='Directory containing the solved annual-beta 0.85 experiment')
+parser.add_argument('--implementation-dir', type=Path,
+                    help='Directory containing saved implementation-shock responses and forecasts')
 args = parser.parse_args()
 src = args.research_root.resolve()
 site = Path(__file__).resolve().parents[1] / 'site'
@@ -191,6 +193,14 @@ metadata['patience_cases'] = {key: dict(annual_beta=case['annual_beta'], quarter
 (site / 'data/experiment_metadata.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
 bundle = dict(shock=baseline_shock, shock_cases=shock_cases, long_run=long_run, downloads=downloads, metadata=metadata)
 (site / 'data/board-data.json').write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':'), allow_nan=False))
+if args.implementation_dir is not None:
+    from refresh_implementation_data import refresh_implementation
+    implementation = refresh_implementation(args.implementation_dir, site)
+elif (site / 'data/implementation-shock.json').is_file():
+    implementation = json.loads((site / 'data/implementation-shock.json').read_text())
+else:
+    raise FileNotFoundError('Supply --implementation-dir for the Implementation shock tab')
+provenance.update(implementation['provenance'])
 (site / 'data/provenance.json').write_text(json.dumps(provenance, indent=2) + '\n')
 with zipfile.ZipFile(site / 'downloads/experiment-data.zip', 'w', compression=zipfile.ZIP_DEFLATED) as archive:
     for path in sorted((site / 'data').iterdir()):

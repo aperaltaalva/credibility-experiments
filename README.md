@@ -7,7 +7,7 @@ annual discount factor 0.90 and one lower-patience case of 0.85. These are preli
 empirical estimates or a completed calibration.
 
 The board includes the same negative income shock at five initial debt levels and
-three initial reputation beliefs, comparisons across models, long-run diagnostics,
+three initial reputation beliefs, a separate implementation-shock tab, comparisons across models, long-run diagnostics,
 state-conditioned pricing, an illustrative narrative measurement bridge, and
 reproduced slide figures/tables. Figures and underlying CSVs can be downloaded.
 
@@ -20,6 +20,12 @@ reproduced slide figures/tables. Figures and underlying CSVs can be downloaded.
   scales span both patience cases. Long-run, pricing, and slide results remain baseline.
 - Reputation means the initial probability assigned to the committed type. In the
   shock experiments, the actual government remains strategic and beliefs update.
+- The **Implementation shock** tab compares one-time borrowing overshoots and
+  undershoots under both patience cases at debt 44.16% of annual income and prior
+  credibility 50%. Its four charts hold the true government strategic. The separate
+  predictive table weights both permanent types by the updated posterior; a rule
+  exceedance is an illustrative event, not literal plan abandonment. The tab also
+  reports the order-dependent debt/belief decomposition of the spread response.
 - Shock flow responses use fixed pre-shock quarterly income; spreads are quarterly
   basis points. Fiscal adjustment is the primary resource balance `y-c`.
 - Ramsey retains inherited promises and has no implementation noise. Its debt
@@ -58,6 +64,14 @@ to the refresh command. It reads the solved experiment's CSV and metadata, and
 includes its static figures when present. The existing baseline CSV stays unchanged.
 Share the lower case with `?patience=lower#shocks` or `?patience=lower#debt`.
 
+To refresh the Implementation shock tab, also supply
+`--implementation-dir /path/to/theory_experiments/output/implementation_shock_20261028`.
+The refresh imports the saved responses, forecasts, numerical checks, and static
+overview without running Julia. Existing implementation data is preserved if this
+option is omitted. Direct links use `#implementation`; its controls are saved in
+the URL through `imp_arm`, `imp_patience`, `imp_scale`, `imp_horizon`, and
+`imp_tolerance`. The Methods tab and data ZIP include its underlying outputs.
+
 Results are selected from precomputed cases without interpolation. The website
 does not run Julia or solve a new equilibrium in the browser.
 
@@ -65,4 +79,4 @@ After committing a checked update, maintainers publish the `site/` tree with
 `python3 scripts/publish_site.py`. GitHub Pages serves the root of the `gh-pages`
 branch; the repository's `main` branch retains the board source and refresh tools.
 
-Published version: 27 October 2026. Julia version used for the experiments: 1.13.3.
+Published version: 28 October 2026. Julia version used for the equilibrium solutions: 1.13.3.

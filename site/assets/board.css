@@ -10,3 +10,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 
 .debt-controls{max-width:420px}.debt-controls label:first-child{min-width:0}
+.implementation-charts{grid-template-columns:repeat(2,minmax(0,1fr))}.predictive-controls{max-width:420px}.predictive-controls label:first-child{min-width:0}.implementation-downloads{font-size:14px;margin-top:22px;line-height:2}
+@media(max-width:850px){.implementation-charts{grid-template-columns:1fr}}
