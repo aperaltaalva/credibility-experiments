@@ -1,5 +1,6 @@
 {
   "date": "2026-10-27",
+  "scope": "Baseline diagnostics; patience variants are listed separately",
   "julia_version": "1.13.3",
   "solution_sha256": "0435193a4eaf0deef40d95451d3d7c0df9001d23f38288f6f687492747583545",
   "parameters": {
@@ -31,5 +32,15 @@
     4000
   ],
   "source_solution": "output/ramsey.jld2",
-  "uncertainty": "Monte Carlo standard errors describe simulation error, conditional on saved solutions and finite history pools."
+  "uncertainty": "Monte Carlo standard errors describe simulation error, conditional on saved solutions and finite history pools.",
+  "patience_cases": {
+    "baseline": {
+      "annual_beta": 0.9,
+      "quarterly_beta": 0.9740037464252967
+    },
+    "lower": {
+      "annual_beta": 0.85,
+      "quarterly_beta": 0.9601845894041878
+    }
+  }
 }
