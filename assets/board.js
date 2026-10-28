@@ -6,7 +6,7 @@
   const modelsAll = ["Ramsey", "Markov", "Reputation_p10", "Reputation_p50", "Reputation_p90"];
   const reputationModels = ["Reputation_p10", "Reputation_p50", "Reputation_p90", "Markov"];
   const repStyles = {Reputation_p10: ["Initial belief 10%", "#7950a2", "solid"], Reputation_p50: ["Initial belief 50%", "#148b88", "solid"], Reputation_p90: ["Initial belief 90%", "#cb8c18", "solid"], Markov: ["Markov reference", "#8593a0", "dash"]};
-  const sections = {shocks: "shocks", debt: "debt-section", longrun: "longrun", pricing: "pricing", methods: "methods"};
+  const sections = {shocks: "shocks", implementation: "implementation", debt: "debt-section", longrun: "longrun", pricing: "pricing", methods: "methods"};
   let board, data, debts, shockCases, currentCase, ready = false, currentSection = "shocks", toastTimer;
   const params = new URLSearchParams(location.search);
   const safe = (value, allowed, fallback) => allowed.includes(value) ? value : fallback;
@@ -15,6 +15,7 @@
     if (!ready) return;
     const q = new URLSearchParams();
     ["patience", "view", "debt", "prior", "scale", "horizon"].forEach(id => q.set(id, $(id).value));
+    ImplementationExperiment.writeParams(q);
     const url = `${location.pathname}?${q.toString()}#${currentSection}`;
     history.replaceState(null, "", url);
   }
@@ -23,6 +24,7 @@
     Object.entries(sections).forEach(([name,id]) => { $(id).hidden = name !== currentSection; $("tab-" + name).setAttribute("aria-selected", String(name === currentSection)); });
     updateUrl();
     if (currentSection === "shocks" && ready) requestAnimationFrame(() => panels.forEach(id => Plotly.Plots.resize($(id))));
+    if (currentSection === "implementation" && ready) ImplementationExperiment.draw().catch(showError);
     if (focus) $("tab-" + currentSection).focus({preventScroll: true});
     if (scroll) requestAnimationFrame(() => {
       const offset = document.querySelector(".section-nav").getBoundingClientRect().height + 20;
@@ -151,7 +153,9 @@
   ["patience", "debt-patience"].forEach(id => $(id).addEventListener("change", () => { selectPatience($(id).value); draw().catch(showError); }));
   function showError(error) { $("load-error").hidden = false; $("load-error").textContent = "The experiment data or charts could not be loaded. Please reload the page. " + (error.message || ""); }
   async function init() {
-    const response = await fetch("data/board-data.json"); if (!response.ok) throw new Error("Data request failed."); board = await response.json();
+    const [base, implementation] = await Promise.all(["data/board-data.json", "data/implementation-shock.json"].map(async file => {
+      const response = await fetch(file); if (!response.ok) throw new Error("Data request failed."); return response.json();
+    })); board = base;
     shockCases = board.shock_cases || {baseline: {...board.shock, label:"Baseline", annual_beta:.90, quarterly_beta:.90**.25, figures:{reputation:"assets/figures/reputation_by_initial_debt.png",debt_paths:"assets/figures/income_shock_by_initial_debt.png",debt_impact:"assets/figures/income_shock_impact_by_debt.png",fiscal_detail:"assets/figures/income_shock_fiscal_detail.png"}}};
     if (!window.Plotly) throw new Error("Plotting library unavailable.");
     for (const id of ["patience", "debt-patience"]) {
@@ -162,9 +166,10 @@
     selectPatience(safe(params.get("patience"),Object.keys(shockCases),"baseline"));
     $("debt").value = safe(params.get("debt"),Object.keys(debts),"44"); $("view").value = safe(params.get("view"),["models","reputation"],"reputation"); $("prior").value = safe(params.get("prior"),["10","50","90"],"50"); $("scale").value = safe(params.get("scale"),["fixed","zoom"],"fixed"); $("horizon").value = safe(params.get("horizon"),["20","40"],"20");
     $("debt").disabled = false; $("share-view").disabled = false; $("download-selection").disabled = false;
-    longRun(board.long_run); downloads(board.downloads); parameterTable(board.metadata);
+    ImplementationExperiment.init(implementation, {notify,updateUrl,showError}, params);
+    longRun(board.long_run); downloads([...board.downloads, ...implementation.downloads]); parameterTable(board.metadata);
     $("julia-version").textContent = board.metadata.julia_version; $("solution-hash").textContent = board.metadata.solution_sha256;
-    const date = new Date(board.metadata.date + "T12:00:00Z"); if (!Number.isNaN(date.getTime())) $("updated-date").textContent = date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
+    const date = new Date([board.metadata.date,implementation.metadata.date].sort().at(-1) + "T12:00:00Z"); if (!Number.isNaN(date.getTime())) $("updated-date").textContent = date.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
     ready = true;
     const requestedSection = location.hash.slice(1), explicitSection = Object.hasOwn(sections, requestedSection);
     const section = safe(requestedSection,Object.keys(sections),"shocks"); await draw(); showSection(section, false, explicitSection);
